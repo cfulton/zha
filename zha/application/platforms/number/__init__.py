@@ -266,9 +266,7 @@ class NumberConfigurationEntity(PlatformEntity):
                 _LOGGER,
             )
         if entity_metadata.unit is not None:
-            self._attr_native_unit_of_measurement = validate_unit(
-                entity_metadata.unit
-            ).value
+            self._attr_native_unit_of_measurement = validate_unit(entity_metadata.unit)
 
     @functools.cached_property
     def info_object(self) -> NumberConfigurationEntityInfo:

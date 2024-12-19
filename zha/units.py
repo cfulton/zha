@@ -4,6 +4,12 @@ from enum import Enum, StrEnum
 from typing import Final
 
 
+class InvalidUnitOfMeasureException(Exception):
+    """Exception for invalid unit of measure."""
+
+    pass
+
+
 class UnitOfTemperature(StrEnum):
     """Temperature units."""
 
@@ -158,24 +164,43 @@ LIGHT_LUX: Final = "lx"
 # Percentage units
 PERCENTAGE: Final[str] = "%"
 
+UNITS_OF_MEASURE_SET = frozenset(
+    set(UnitOfApparentPower._value2member_map_.keys())
+    | set(UnitOfPower._value2member_map_.keys())
+    | set(UnitOfEnergy._value2member_map_.keys())
+    | set(UnitOfElectricCurrent._value2member_map_.keys())
+    | set(UnitOfElectricPotential._value2member_map_.keys())
+    | set(UnitOfTemperature._value2member_map_.keys())
+    | set(UnitOfTime._value2member_map_.keys())
+    | set(UnitOfFrequency._value2member_map_.keys())
+    | set(UnitOfPressure._value2member_map_.keys())
+    | set(UnitOfVolume._value2member_map_.keys())
+    | set(UnitOfVolumeFlowRate._value2member_map_.keys())
+    | set(UnitOfLength._value2member_map_.keys())
+    | set(UnitOfMass._value2member_map_.keys())
+    | {
+        CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+        CONCENTRATION_MILLIGRAMS_PER_CUBIC_METER,
+        CONCENTRATION_MICROGRAMS_PER_CUBIC_FOOT,
+        CONCENTRATION_PARTS_PER_CUBIC_METER,
+        CONCENTRATION_PARTS_PER_MILLION,
+        CONCENTRATION_PARTS_PER_BILLION,
+        SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+        SIGNAL_STRENGTH_DECIBELS,
+        LIGHT_LUX,
+        PERCENTAGE,
+    }
+)
 
-UNITS_OF_MEASURE = {
-    UnitOfApparentPower.__name__: UnitOfApparentPower,
-    UnitOfPower.__name__: UnitOfPower,
-    UnitOfEnergy.__name__: UnitOfEnergy,
-    UnitOfElectricCurrent.__name__: UnitOfElectricCurrent,
-    UnitOfElectricPotential.__name__: UnitOfElectricPotential,
-    UnitOfTemperature.__name__: UnitOfTemperature,
-    UnitOfTime.__name__: UnitOfTime,
-    UnitOfFrequency.__name__: UnitOfFrequency,
-    UnitOfPressure.__name__: UnitOfPressure,
-    UnitOfVolume.__name__: UnitOfVolume,
-    UnitOfVolumeFlowRate.__name__: UnitOfVolumeFlowRate,
-    UnitOfLength.__name__: UnitOfLength,
-    UnitOfMass.__name__: UnitOfMass,
-}
 
-
-def validate_unit(external_unit: Enum) -> Enum:
+def validate_unit(unit: str | Enum) -> str:
     """Validate and return a unit of measure."""
-    return UNITS_OF_MEASURE[type(external_unit).__name__](external_unit.value)
+
+    check_unit = unit.value if isinstance(unit, Enum) else unit
+
+    if check_unit in UNITS_OF_MEASURE_SET:
+        return check_unit
+
+    raise InvalidUnitOfMeasureException(
+        f"Invalid unit of measurement: '{check_unit}'. Valid units are: {', '.join(f"'{unit_of_measure}'" for unit_of_measure in UNITS_OF_MEASURE_SET)}."
+    )
