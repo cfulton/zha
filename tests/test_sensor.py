@@ -7,6 +7,7 @@ import math
 from typing import Any, Optional
 from unittest.mock import AsyncMock, MagicMock
 
+from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfPressure, UnitOfVolume
 import pytest
 from zhaquirks.danfoss import thermostat as danfoss_thermostat
 from zigpy.device import Device as ZigpyDevice
@@ -37,7 +38,6 @@ from zha.application.gateway import Gateway
 from zha.application.platforms import PlatformEntity, sensor
 from zha.application.platforms.sensor import DanfossSoftwareErrorCode, UnitOfMass
 from zha.application.platforms.sensor.const import SensorDeviceClass
-from zha.units import PERCENTAGE, UnitOfEnergy, UnitOfPressure, UnitOfVolume
 from zha.zigbee.device import Device
 
 EMAttrs = homeautomation.ElectricalMeasurement.AttributeDefs

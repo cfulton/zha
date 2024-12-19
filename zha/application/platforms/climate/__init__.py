@@ -8,6 +8,7 @@ import datetime as dt
 import functools
 from typing import TYPE_CHECKING, Any
 
+from homeassistant.const import UnitOfTemperature
 from zigpy.zcl.clusters.hvac import FanMode, RunningState, SystemMode
 
 from zha.application import Platform
@@ -39,7 +40,6 @@ from zha.application.platforms.climate.const import (
 )
 from zha.application.registries import PLATFORM_ENTITIES
 from zha.decorators import periodic
-from zha.units import UnitOfTemperature
 from zha.zigbee.cluster_handlers import ClusterAttributeUpdatedEvent
 from zha.zigbee.cluster_handlers.const import (
     CLUSTER_HANDLER_ATTRIBUTE_UPDATED,

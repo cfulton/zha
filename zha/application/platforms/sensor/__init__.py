@@ -11,6 +11,26 @@ import logging
 import numbers
 from typing import TYPE_CHECKING, Any, Self
 
+from homeassistant.const import (
+    CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+    CONCENTRATION_PARTS_PER_BILLION,
+    CONCENTRATION_PARTS_PER_MILLION,
+    LIGHT_LUX,
+    PERCENTAGE,
+    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    UnitOfApparentPower,
+    UnitOfElectricCurrent,
+    UnitOfElectricPotential,
+    UnitOfEnergy,
+    UnitOfFrequency,
+    UnitOfMass,
+    UnitOfPower,
+    UnitOfPressure,
+    UnitOfTemperature,
+    UnitOfTime,
+    UnitOfVolume,
+    UnitOfVolumeFlowRate,
+)
 from zhaquirks.danfoss import thermostat as danfoss_thermostat
 from zhaquirks.quirk_ids import DANFOSS_ALLY_THERMOSTAT
 from zigpy import types
@@ -37,27 +57,6 @@ from zha.application.platforms.sensor.const import (
 )
 from zha.application.registries import PLATFORM_ENTITIES
 from zha.decorators import periodic
-from zha.units import (
-    CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
-    CONCENTRATION_PARTS_PER_BILLION,
-    CONCENTRATION_PARTS_PER_MILLION,
-    LIGHT_LUX,
-    PERCENTAGE,
-    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-    UnitOfApparentPower,
-    UnitOfElectricCurrent,
-    UnitOfElectricPotential,
-    UnitOfEnergy,
-    UnitOfFrequency,
-    UnitOfMass,
-    UnitOfPower,
-    UnitOfPressure,
-    UnitOfTemperature,
-    UnitOfTime,
-    UnitOfVolume,
-    UnitOfVolumeFlowRate,
-    validate_unit,
-)
 from zha.zigbee.cluster_handlers import ClusterAttributeUpdatedEvent
 from zha.zigbee.cluster_handlers.const import (
     CLUSTER_HANDLER_ANALOG_INPUT,
@@ -217,9 +216,7 @@ class Sensor(PlatformEntity):
                 _LOGGER,
             )
         if entity_metadata.unit is not None:
-            self._attr_native_unit_of_measurement = validate_unit(
-                entity_metadata.unit
-            ).value
+            self._attr_native_unit_of_measurement = entity_metadata.unit
 
     @functools.cached_property
     def info_object(self) -> SensorEntityInfo:

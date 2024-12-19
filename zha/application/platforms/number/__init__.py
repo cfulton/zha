@@ -7,6 +7,7 @@ import functools
 import logging
 from typing import TYPE_CHECKING, Any, Self
 
+from homeassistant.const import UnitOfMass, UnitOfTemperature, UnitOfTime
 from zhaquirks.quirk_ids import DANFOSS_ALLY_THERMOSTAT
 from zigpy.quirks.v2 import NumberMetadata
 from zigpy.zcl.clusters.hvac import Thermostat
@@ -22,7 +23,6 @@ from zha.application.platforms.number.const import (
     NumberMode,
 )
 from zha.application.registries import PLATFORM_ENTITIES
-from zha.units import UnitOfMass, UnitOfTemperature, UnitOfTime, validate_unit
 from zha.zigbee.cluster_handlers import ClusterAttributeUpdatedEvent
 from zha.zigbee.cluster_handlers.const import (
     CLUSTER_HANDLER_ANALOG_OUTPUT,
@@ -266,9 +266,7 @@ class NumberConfigurationEntity(PlatformEntity):
                 _LOGGER,
             )
         if entity_metadata.unit is not None:
-            self._attr_native_unit_of_measurement = validate_unit(
-                entity_metadata.unit
-            ).value
+            self._attr_native_unit_of_measurement = entity_metadata.unit
 
     @functools.cached_property
     def info_object(self) -> NumberConfigurationEntityInfo:
