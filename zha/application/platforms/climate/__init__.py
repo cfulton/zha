@@ -8,7 +8,6 @@ import datetime as dt
 import functools
 from typing import TYPE_CHECKING, Any
 
-from homeassistant.const import UnitOfTemperature
 from zigpy.zcl.clusters.hvac import FanMode, RunningState, SystemMode
 
 from zha.application import Platform
@@ -81,7 +80,7 @@ class Thermostat(PlatformEntity):
     DEFAULT_MIN_TEMP = 7
 
     _attr_precision = PRECISION_TENTHS
-    _attr_temperature_unit = UnitOfTemperature.CELSIUS
+    _attr_temperature_unit = "°C"
     _attr_translation_key: str = "thermostat"
     _enable_turn_on_off_backwards_compatibility = False
     _attr_extra_state_attribute_names: set[str] = {

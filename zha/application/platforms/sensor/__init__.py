@@ -11,26 +11,6 @@ import logging
 import numbers
 from typing import TYPE_CHECKING, Any, Self
 
-from homeassistant.const import (
-    CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
-    CONCENTRATION_PARTS_PER_BILLION,
-    CONCENTRATION_PARTS_PER_MILLION,
-    LIGHT_LUX,
-    PERCENTAGE,
-    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-    UnitOfApparentPower,
-    UnitOfElectricCurrent,
-    UnitOfElectricPotential,
-    UnitOfEnergy,
-    UnitOfFrequency,
-    UnitOfMass,
-    UnitOfPower,
-    UnitOfPressure,
-    UnitOfTemperature,
-    UnitOfTime,
-    UnitOfVolume,
-    UnitOfVolumeFlowRate,
-)
 from zhaquirks.danfoss import thermostat as danfoss_thermostat
 from zhaquirks.quirk_ids import DANFOSS_ALLY_THERMOSTAT
 from zigpy import types
@@ -536,7 +516,7 @@ class Battery(Sensor):
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.BATTERY
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _attr_entity_category = EntityCategory.DIAGNOSTIC
-    _attr_native_unit_of_measurement = PERCENTAGE
+    _attr_native_unit_of_measurement = "%"
     _attr_extra_state_attribute_names: set[str] = {
         "battery_size",
         "battery_quantity",
@@ -599,7 +579,7 @@ class ElectricalMeasurement(PollableSensor):
     _attribute_name = "active_power"
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.POWER
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
-    _attr_native_unit_of_measurement: str = UnitOfPower.WATT
+    _attr_native_unit_of_measurement: str = "W"
     _div_mul_prefix: str | None = "ac_power"
 
     def __init__(
@@ -667,7 +647,7 @@ class ElectricalMeasurementApparentPower(PolledElectricalMeasurement):
     _unique_id_suffix = "apparent_power"
     _use_custom_polling = False  # Poll indirectly by ElectricalMeasurementSensor
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.APPARENT_POWER
-    _attr_native_unit_of_measurement = UnitOfApparentPower.VOLT_AMPERE
+    _attr_native_unit_of_measurement = "VA"
     _div_mul_prefix = "ac_power"
 
 
@@ -679,7 +659,7 @@ class ElectricalMeasurementRMSCurrent(PolledElectricalMeasurement):
     _unique_id_suffix = "rms_current"
     _use_custom_polling = False  # Poll indirectly by ElectricalMeasurementSensor
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.CURRENT
-    _attr_native_unit_of_measurement = UnitOfElectricCurrent.AMPERE
+    _attr_native_unit_of_measurement = "A"
     _div_mul_prefix = "ac_current"
 
 
@@ -691,7 +671,7 @@ class ElectricalMeasurementRMSVoltage(PolledElectricalMeasurement):
     _unique_id_suffix = "rms_voltage"
     _use_custom_polling = False  # Poll indirectly by ElectricalMeasurementSensor
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.VOLTAGE
-    _attr_native_unit_of_measurement = UnitOfElectricPotential.VOLT
+    _attr_native_unit_of_measurement = "V"
     _div_mul_prefix = "ac_voltage"
 
 
@@ -704,7 +684,7 @@ class ElectricalMeasurementFrequency(PolledElectricalMeasurement):
     _use_custom_polling = False  # Poll indirectly by ElectricalMeasurementSensor
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.FREQUENCY
     _attr_translation_key: str = "ac_frequency"
-    _attr_native_unit_of_measurement = UnitOfFrequency.HERTZ
+    _attr_native_unit_of_measurement = "Hz"
     _div_mul_prefix = "ac_frequency"
 
 
@@ -716,7 +696,7 @@ class ElectricalMeasurementPowerFactor(PolledElectricalMeasurement):
     _unique_id_suffix = "power_factor"
     _use_custom_polling = False  # Poll indirectly by ElectricalMeasurementSensor
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.POWER_FACTOR
-    _attr_native_unit_of_measurement = PERCENTAGE
+    _attr_native_unit_of_measurement = "%"
     _div_mul_prefix = None
 
 
@@ -735,7 +715,7 @@ class Humidity(Sensor):
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.HUMIDITY
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _divisor = 100
-    _attr_native_unit_of_measurement = PERCENTAGE
+    _attr_native_unit_of_measurement = "%"
 
 
 @MULTI_MATCH(cluster_handler_names=CLUSTER_HANDLER_SOIL_MOISTURE)
@@ -747,7 +727,7 @@ class SoilMoisture(Sensor):
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _attr_translation_key: str = "soil_moisture"
     _divisor = 100
-    _attr_native_unit_of_measurement = PERCENTAGE
+    _attr_native_unit_of_measurement = "%"
 
 
 @MULTI_MATCH(cluster_handler_names=CLUSTER_HANDLER_LEAF_WETNESS)
@@ -759,7 +739,7 @@ class LeafWetness(Sensor):
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _attr_translation_key: str = "leaf_wetness"
     _divisor = 100
-    _attr_native_unit_of_measurement = PERCENTAGE
+    _attr_native_unit_of_measurement = "%"
 
 
 @MULTI_MATCH(cluster_handler_names=CLUSTER_HANDLER_ILLUMINANCE)
@@ -769,7 +749,7 @@ class Illuminance(Sensor):
     _attribute_name = "measured_value"
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.ILLUMINANCE
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
-    _attr_native_unit_of_measurement = LIGHT_LUX
+    _attr_native_unit_of_measurement = "lx"
 
     def formatter(self, value: int) -> int | None:
         """Convert illumination data."""
@@ -810,49 +790,49 @@ class SmartEnergyMetering(PollableSensor):
 
     _ENTITY_DESCRIPTION_MAP = {
         0x00: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=UnitOfPower.WATT,
+            native_unit_of_measurement="W",
             device_class=SensorDeviceClass.POWER,
         ),
         0x01: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=UnitOfVolumeFlowRate.CUBIC_METERS_PER_HOUR,
+            native_unit_of_measurement="m³/h",
             device_class=None,  # volume flow rate is not supported yet
         ),
         0x02: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=UnitOfVolumeFlowRate.CUBIC_FEET_PER_MINUTE,
+            native_unit_of_measurement="ft³/min",
             device_class=None,  # volume flow rate is not supported yet
         ),
         0x03: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=UnitOfVolumeFlowRate.CUBIC_METERS_PER_HOUR,
+            native_unit_of_measurement="m³/h",
             device_class=None,  # volume flow rate is not supported yet
             scale=100,
         ),
         0x04: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=f"{UnitOfVolume.GALLONS}/{UnitOfTime.HOURS}",  # US gallons per hour
+            native_unit_of_measurement=f"{"gal"}/{"h"}",  # US gallons per hour
             device_class=None,  # volume flow rate is not supported yet
         ),
         0x05: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=f"IMP {UnitOfVolume.GALLONS}/{UnitOfTime.HOURS}",  # IMP gallons per hour
+            native_unit_of_measurement=f"IMP {"gal"}/{"h"}",  # IMP gallons per hour
             device_class=None,  # needs to be None as imperial gallons are not supported
         ),
         0x06: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=UnitOfPower.BTU_PER_HOUR,
+            native_unit_of_measurement="BTU/h",
             device_class=None,
             state_class=None,
         ),
         0x07: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=f"l/{UnitOfTime.HOURS}",
+            native_unit_of_measurement=f"l/{"h"}",
             device_class=None,  # volume flow rate is not supported yet
         ),
         0x08: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=UnitOfPressure.KPA,
+            native_unit_of_measurement="kPa",
             device_class=SensorDeviceClass.PRESSURE,
         ),  # gauge
         0x09: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=UnitOfPressure.KPA,
+            native_unit_of_measurement="kPa",
             device_class=SensorDeviceClass.PRESSURE,
         ),  # absolute
         0x0A: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=f"{UnitOfVolume.CUBIC_FEET}/{UnitOfTime.HOURS}",  # cubic feet per hour
+            native_unit_of_measurement=f"{"ft³"}/{"h"}",  # cubic feet per hour
             device_class=None,  # volume flow rate is not supported yet
             scale=1000,
         ),
@@ -860,7 +840,7 @@ class SmartEnergyMetering(PollableSensor):
             native_unit_of_measurement="unitless", device_class=None, state_class=None
         ),
         0x0C: SmartEnergyMeteringEntityDescription(
-            native_unit_of_measurement=f"{UnitOfEnergy.MEGA_JOULE}/{UnitOfTime.SECONDS}",
+            native_unit_of_measurement=f"{"MJ"}/{"s"}",
             device_class=None,  # needs to be None as MJ/s is not supported
         ),
     }
@@ -927,49 +907,49 @@ class SmartEnergySummation(SmartEnergyMetering):
 
     _ENTITY_DESCRIPTION_MAP = {
         0x00: SmartEnergySummationEntityDescription(
-            native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+            native_unit_of_measurement="kWh",
             device_class=SensorDeviceClass.ENERGY,
         ),
         0x01: SmartEnergySummationEntityDescription(
-            native_unit_of_measurement=UnitOfVolume.CUBIC_METERS,
+            native_unit_of_measurement="m³",
             device_class=SensorDeviceClass.VOLUME,
         ),
         0x02: SmartEnergySummationEntityDescription(
-            native_unit_of_measurement=UnitOfVolume.CUBIC_FEET,
+            native_unit_of_measurement="ft³",
             device_class=SensorDeviceClass.VOLUME,
         ),
         0x03: SmartEnergySummationEntityDescription(
-            native_unit_of_measurement=UnitOfVolume.CUBIC_FEET,
+            native_unit_of_measurement="ft³",
             device_class=SensorDeviceClass.VOLUME,
             scale=100,
         ),
         0x04: SmartEnergySummationEntityDescription(
-            native_unit_of_measurement=UnitOfVolume.GALLONS,  # US gallons
+            native_unit_of_measurement="gal",  # US gallons
             device_class=SensorDeviceClass.VOLUME,
         ),
         0x05: SmartEnergySummationEntityDescription(
-            native_unit_of_measurement=f"IMP {UnitOfVolume.GALLONS}",
+            native_unit_of_measurement=f"IMP {"gal"}",
             device_class=None,  # needs to be None as imperial gallons are not supported
         ),
         0x06: SmartEnergySummationEntityDescription(
             native_unit_of_measurement="BTU", device_class=None, state_class=None
         ),
         0x07: SmartEnergySummationEntityDescription(
-            native_unit_of_measurement=UnitOfVolume.LITERS,
+            native_unit_of_measurement="L",
             device_class=SensorDeviceClass.VOLUME,
         ),
         0x08: SmartEnergySummationEntityDescription(
-            native_unit_of_measurement=UnitOfPressure.KPA,
+            native_unit_of_measurement="kPa",
             device_class=SensorDeviceClass.PRESSURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),  # gauge
         0x09: SmartEnergySummationEntityDescription(
-            native_unit_of_measurement=UnitOfPressure.KPA,
+            native_unit_of_measurement="kPa",
             device_class=SensorDeviceClass.PRESSURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),  # absolute
         0x0A: SmartEnergySummationEntityDescription(
-            native_unit_of_measurement=UnitOfVolume.CUBIC_FEET,
+            native_unit_of_measurement="ft³",
             device_class=SensorDeviceClass.VOLUME,
             scale=1000,
         ),
@@ -977,7 +957,7 @@ class SmartEnergySummation(SmartEnergyMetering):
             native_unit_of_measurement="unitless", device_class=None, state_class=None
         ),
         0x0C: SmartEnergySummationEntityDescription(
-            native_unit_of_measurement=UnitOfEnergy.MEGA_JOULE,
+            native_unit_of_measurement="MJ",
             device_class=SensorDeviceClass.ENERGY,
         ),
     }
@@ -1127,7 +1107,7 @@ class Pressure(Sensor):
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.PRESSURE
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _decimals = 0
-    _attr_native_unit_of_measurement = UnitOfPressure.HPA
+    _attr_native_unit_of_measurement = "hPa"
 
 
 @MULTI_MATCH(cluster_handler_names=CLUSTER_HANDLER_FLOW)
@@ -1138,7 +1118,7 @@ class Flow(Sensor):
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.VOLUME_FLOW_RATE
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _divisor = 10
-    _attr_native_unit_of_measurement = UnitOfVolumeFlowRate.CUBIC_METERS_PER_HOUR
+    _attr_native_unit_of_measurement = "m³/h"
 
     def formatter(self, value: int) -> datetime | int | float | str | None:
         """Handle unknown value state."""
@@ -1155,7 +1135,7 @@ class Temperature(Sensor):
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.TEMPERATURE
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _divisor = 100
-    _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
+    _attr_native_unit_of_measurement = "°C"
 
 
 @MULTI_MATCH(cluster_handler_names=CLUSTER_HANDLER_DEVICE_TEMPERATURE)
@@ -1167,7 +1147,7 @@ class DeviceTemperature(Sensor):
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _attr_translation_key: str = "device_temperature"
     _divisor = 100
-    _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
+    _attr_native_unit_of_measurement = "°C"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
 
 
@@ -1179,7 +1159,7 @@ class InovelliInternalTemperature(Sensor):
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.TEMPERATURE
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _attr_translation_key: str = "internal_temp_monitor"
-    _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
+    _attr_native_unit_of_measurement = "°C"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
 
 
@@ -1210,7 +1190,7 @@ class CarbonDioxideConcentration(Sensor):
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _decimals = 0
     _multiplier = 1e6
-    _attr_native_unit_of_measurement = CONCENTRATION_PARTS_PER_MILLION
+    _attr_native_unit_of_measurement = "ppm"
 
 
 @MULTI_MATCH(cluster_handler_names="carbon_monoxide_concentration")
@@ -1222,7 +1202,7 @@ class CarbonMonoxideConcentration(Sensor):
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _decimals = 0
     _multiplier = 1e6
-    _attr_native_unit_of_measurement = CONCENTRATION_PARTS_PER_MILLION
+    _attr_native_unit_of_measurement = "ppm"
 
 
 @MULTI_MATCH(generic_ids="cluster_handler_0x042e", stop_on_match_group="voc_level")
@@ -1235,7 +1215,7 @@ class VOCLevel(Sensor):
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _decimals = 0
     _multiplier = 1e6
-    _attr_native_unit_of_measurement = CONCENTRATION_MICROGRAMS_PER_CUBIC_METER
+    _attr_native_unit_of_measurement = "µg/m³"
 
 
 @MULTI_MATCH(
@@ -1253,7 +1233,7 @@ class PPBVOCLevel(Sensor):
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _decimals = 0
     _multiplier = 1
-    _attr_native_unit_of_measurement = CONCENTRATION_PARTS_PER_BILLION
+    _attr_native_unit_of_measurement = "ppb"
 
 
 @MULTI_MATCH(cluster_handler_names="pm25")
@@ -1265,7 +1245,7 @@ class PM25(Sensor):
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _decimals = 0
     _multiplier = 1
-    _attr_native_unit_of_measurement = CONCENTRATION_MICROGRAMS_PER_CUBIC_METER
+    _attr_native_unit_of_measurement = "µg/m³"
 
 
 @MULTI_MATCH(cluster_handler_names="formaldehyde_concentration")
@@ -1277,7 +1257,7 @@ class FormaldehydeConcentration(Sensor):
     _attr_translation_key: str = "formaldehyde"
     _decimals = 0
     _multiplier = 1e6
-    _attr_native_unit_of_measurement = CONCENTRATION_PARTS_PER_MILLION
+    _attr_native_unit_of_measurement = "ppm"
 
 
 @MULTI_MATCH(
@@ -1422,7 +1402,7 @@ class RSSISensor(Sensor):
     _unique_id_suffix = "rssi"
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _attr_device_class: SensorDeviceClass | None = SensorDeviceClass.SIGNAL_STRENGTH
-    _attr_native_unit_of_measurement: str | None = SIGNAL_STRENGTH_DECIBELS_MILLIWATT
+    _attr_native_unit_of_measurement: str | None = "dBm"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_entity_registry_enabled_default = False
     _attr_translation_key: str = "rssi"
@@ -1520,7 +1500,7 @@ class TimeLeft(Sensor):
     _unique_id_suffix = "time_left"
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.DURATION
     _attr_translation_key: str = "timer_time_left"
-    _attr_native_unit_of_measurement = UnitOfTime.MINUTES
+    _attr_native_unit_of_measurement = "min"
 
 
 @MULTI_MATCH(cluster_handler_names="ikea_airpurifier")
@@ -1531,7 +1511,7 @@ class IkeaDeviceRunTime(Sensor):
     _unique_id_suffix = "device_run_time"
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.DURATION
     _attr_translation_key: str = "device_run_time"
-    _attr_native_unit_of_measurement = UnitOfTime.MINUTES
+    _attr_native_unit_of_measurement = "min"
     _attr_entity_category: EntityCategory = EntityCategory.DIAGNOSTIC
 
 
@@ -1543,7 +1523,7 @@ class IkeaFilterRunTime(Sensor):
     _unique_id_suffix = "filter_run_time"
     _attr_device_class: SensorDeviceClass = SensorDeviceClass.DURATION
     _attr_translation_key: str = "filter_run_time"
-    _attr_native_unit_of_measurement = UnitOfTime.MINUTES
+    _attr_native_unit_of_measurement = "min"
     _attr_entity_category: EntityCategory = EntityCategory.DIAGNOSTIC
 
 
@@ -1590,7 +1570,7 @@ class AqaraPetFeederWeightDispensed(Sensor):
     _attribute_name = "weight_dispensed"
     _unique_id_suffix = "weight_dispensed"
     _attr_translation_key: str = "weight_dispensed_today"
-    _attr_native_unit_of_measurement = UnitOfMass.GRAMS
+    _attr_native_unit_of_measurement = "g"
     _attr_state_class: SensorStateClass = SensorStateClass.TOTAL_INCREASING
 
 
@@ -1633,7 +1613,7 @@ class PiHeatingDemand(Sensor):
     _unique_id_suffix = "pi_heating_demand"
     _attribute_name = "pi_heating_demand"
     _attr_translation_key: str = "pi_heating_demand"
-    _attr_native_unit_of_measurement = PERCENTAGE
+    _attr_native_unit_of_measurement = "%"
     _decimals = 0
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _attr_entity_category = EntityCategory.DIAGNOSTIC

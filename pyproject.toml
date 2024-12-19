@@ -23,7 +23,6 @@ dependencies = [
     "zha-quirks==0.0.125",
     "pyserial==3.5",
     "pyserial-asyncio-fast",
-    "homeassistant",
 ]
 
 [tool.setuptools.packages.find]

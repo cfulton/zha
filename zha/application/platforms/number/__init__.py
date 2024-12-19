@@ -7,7 +7,6 @@ import functools
 import logging
 from typing import TYPE_CHECKING, Any, Self
 
-from homeassistant.const import UnitOfMass, UnitOfTemperature, UnitOfTime
 from zhaquirks.quirk_ids import DANFOSS_ALLY_THERMOSTAT
 from zigpy.quirks.v2 import NumberMetadata
 from zigpy.zcl.clusters.hvac import Thermostat
@@ -812,7 +811,7 @@ class AqaraPetFeederPortionWeight(NumberConfigurationEntity):
     _attr_translation_key: str = "portion_weight"
 
     _attr_mode: NumberMode = NumberMode.BOX
-    _attr_native_unit_of_measurement: str = UnitOfMass.GRAMS
+    _attr_native_unit_of_measurement: str = "g"
 
 
 @CONFIG_DIAGNOSTIC_MATCH(
@@ -830,7 +829,7 @@ class AqaraThermostatAwayTemp(NumberConfigurationEntity):
     _attr_translation_key: str = "away_preset_temperature"
 
     _attr_mode: NumberMode = NumberMode.SLIDER
-    _attr_native_unit_of_measurement: str = UnitOfTemperature.CELSIUS
+    _attr_native_unit_of_measurement: str = "°C"
 
 
 @CONFIG_DIAGNOSTIC_MATCH(
@@ -849,7 +848,7 @@ class ThermostatLocalTempCalibration(NumberConfigurationEntity):
     _attr_translation_key: str = "local_temperature_calibration"
 
     _attr_mode: NumberMode = NumberMode.BOX
-    _attr_native_unit_of_measurement: str = UnitOfTemperature.CELSIUS
+    _attr_native_unit_of_measurement: str = "°C"
 
 
 @CONFIG_DIAGNOSTIC_MATCH(
@@ -884,7 +883,7 @@ class SonoffPresenceSenorTimeout(NumberConfigurationEntity):
 class ZCLTemperatureEntity(NumberConfigurationEntity):
     """Common entity class for ZCL temperature input."""
 
-    _attr_native_unit_of_measurement: str = UnitOfTemperature.CELSIUS
+    _attr_native_unit_of_measurement: str = "°C"
     _attr_mode: NumberMode = NumberMode.BOX
     _attr_native_step: float = 0.01
     _attr_multiplier: float = 0.01
@@ -955,7 +954,7 @@ class DanfossExerciseTriggerTime(NumberConfigurationEntity):
     _attr_native_min_value: int = 0
     _attr_native_max_value: int = 1439
     _attr_mode: NumberMode = NumberMode.BOX
-    _attr_native_unit_of_measurement: str = UnitOfTime.MINUTES
+    _attr_native_unit_of_measurement: str = "min"
 
 
 @CONFIG_DIAGNOSTIC_MATCH(
@@ -998,7 +997,7 @@ class DanfossRegulationSetpointOffset(NumberConfigurationEntity):
     _attribute_name: str = "regulation_setpoint_offset"
     _attr_translation_key: str = "regulation_setpoint_offset"
     _attr_mode: NumberMode = NumberMode.BOX
-    _attr_native_unit_of_measurement: str = UnitOfTemperature.CELSIUS
+    _attr_native_unit_of_measurement: str = "°C"
     _attr_native_min_value: float = -2.5
     _attr_native_max_value: float = 2.5
     _attr_native_step: float = 0.1

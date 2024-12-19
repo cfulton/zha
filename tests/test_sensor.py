@@ -7,7 +7,6 @@ import math
 from typing import Any, Optional
 from unittest.mock import AsyncMock, MagicMock
 
-from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfPressure, UnitOfVolume
 import pytest
 from zhaquirks.danfoss import thermostat as danfoss_thermostat
 from zigpy.device import Device as ZigpyDevice
@@ -36,7 +35,7 @@ from zha.application import Platform
 from zha.application.const import ZHA_CLUSTER_HANDLER_READS_PER_REQ
 from zha.application.gateway import Gateway
 from zha.application.platforms import PlatformEntity, sensor
-from zha.application.platforms.sensor import DanfossSoftwareErrorCode, UnitOfMass
+from zha.application.platforms.sensor import DanfossSoftwareErrorCode
 from zha.application.platforms.sensor.const import SensorDeviceClass
 from zha.zigbee.device import Device
 
@@ -193,7 +192,7 @@ async def async_test_smart_energy_summation_delivered(
     await send_attributes_report(
         zha_gateway, cluster, {1025: 1, "current_summ_delivered": 12321, 1026: 100}
     )
-    assert_state(entity, 12.321, UnitOfEnergy.KILO_WATT_HOUR)
+    assert_state(entity, 12.321, "kWh")
     assert entity.state["status"] == "NO_ALARMS"
     assert entity.state["device_type"] == "Electric Metering"
     assert entity.info_object.device_class == SensorDeviceClass.ENERGY
@@ -207,7 +206,7 @@ async def async_test_smart_energy_summation_received(
     await send_attributes_report(
         zha_gateway, cluster, {1025: 1, "current_summ_received": 12321, 1026: 100}
     )
-    assert_state(entity, 12.321, UnitOfEnergy.KILO_WATT_HOUR)
+    assert_state(entity, 12.321, "kWh")
     assert entity.state["status"] == "NO_ALARMS"
     assert entity.state["device_type"] == "Electric Metering"
     assert entity.info_object.device_class == SensorDeviceClass.ENERGY
@@ -284,17 +283,17 @@ async def async_test_em_power_factor(
     # update divisor cached value
     await send_attributes_report(zha_gateway, cluster, {"ac_power_divisor": 1})
     await send_attributes_report(zha_gateway, cluster, {0: 1, 0x0510: 100, 10: 1000})
-    assert_state(entity, 100, PERCENTAGE)
+    assert_state(entity, 100, "%")
 
     await send_attributes_report(zha_gateway, cluster, {0: 1, 0x0510: 99, 10: 1000})
-    assert_state(entity, 99, PERCENTAGE)
+    assert_state(entity, 99, "%")
 
     await send_attributes_report(zha_gateway, cluster, {"ac_power_divisor": 10})
     await send_attributes_report(zha_gateway, cluster, {0: 1, 0x0510: 100, 10: 5000})
-    assert_state(entity, 100, PERCENTAGE)
+    assert_state(entity, 100, "%")
 
     await send_attributes_report(zha_gateway, cluster, {0: 1, 0x0510: 99, 10: 5000})
-    assert_state(entity, 99, PERCENTAGE)
+    assert_state(entity, 99, "%")
 
 
 async def async_test_em_rms_current(
@@ -884,73 +883,73 @@ async def test_unsupported_attributes_sensor(
             1,
             12320,
             1.23,
-            UnitOfVolume.CUBIC_METERS,
+            "m³",
         ),
         (
             1,
             1232000,
             123.2,
-            UnitOfVolume.CUBIC_METERS,
+            "m³",
         ),
         (
             3,
             2340,
             0.23,
-            UnitOfVolume.CUBIC_FEET,
+            "ft³",
         ),
         (
             3,
             2360,
             0.24,
-            UnitOfVolume.CUBIC_FEET,
+            "ft³",
         ),
         (
             8,
             23660,
             2.37,
-            UnitOfPressure.KPA,
+            "kPa",
         ),
         (
             0,
             9366,
             0.937,
-            UnitOfEnergy.KILO_WATT_HOUR,
+            "kWh",
         ),
         (
             0,
             999,
             0.1,
-            UnitOfEnergy.KILO_WATT_HOUR,
+            "kWh",
         ),
         (
             0,
             10091,
             1.009,
-            UnitOfEnergy.KILO_WATT_HOUR,
+            "kWh",
         ),
         (
             0,
             10099,
             1.01,
-            UnitOfEnergy.KILO_WATT_HOUR,
+            "kWh",
         ),
         (
             0,
             100999,
             10.1,
-            UnitOfEnergy.KILO_WATT_HOUR,
+            "kWh",
         ),
         (
             0,
             100023,
             10.002,
-            UnitOfEnergy.KILO_WATT_HOUR,
+            "kWh",
         ),
         (
             0,
             102456,
             10.246,
-            UnitOfEnergy.KILO_WATT_HOUR,
+            "kWh",
         ),
         (
             5,
@@ -962,7 +961,7 @@ async def test_unsupported_attributes_sensor(
             7,
             50124,
             5.01,
-            UnitOfVolume.LITERS,
+            "L",
         ),
     ),
 )
@@ -1241,7 +1240,7 @@ class OppleCluster(CustomCluster, ManufacturerSpecificCluster):
         OppleCluster.cluster_id,
         divisor=1,
         multiplier=1,
-        unit=UnitOfMass.GRAMS,
+        unit="g",
         translation_key="last_feeding_size",
         fallback_name="Last feeding size",
     )
